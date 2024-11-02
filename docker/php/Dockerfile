@@ -37,12 +37,9 @@ COPY ./src /var/www/html
 # 作業ディレクトリの設定
 WORKDIR /var/www/html
 
-# Composerインストールとオートロードファイルの生成
-RUN composer install && composer dump-autoload
+# entrypoint.shのスクリプトをコピーし、実行権限を付与
+COPY ./docker/php/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Laravelの初期設定スクリプトの実行
-RUN cp .env.example .env && \
-  php artisan key:generate && \
-  mkdir -p /var/www/html/storage/framework/{sessions,cache,views} && \
-  chmod -R 775 /var/www/html/storage && \
-  chown -R www-data:www-data /var/www/html/storage
+# コンテナ起動時にentrypoint.shを実行
+ENTRYPOINT ["/entrypoint.sh"]
