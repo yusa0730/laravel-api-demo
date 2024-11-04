@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   version: 1.0.0
   title: User TODO LIST API
@@ -14,29 +14,24 @@ paths:
       description: >
         Returns all users
       operationId: findUsers
+      security:
+        - BearerAuth: []
       responses:
         "200":
           description: user response
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  users:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/User"
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
               example:
-                status: 200
-                users:
-                  - id: 100
-                    name: "Taro"
-                    email: "example0000@yahoo.co.jp"
-                  - id: 101
-                    name: "Jiro"
-                    email: "example1111@yahoo.co.jp"
+                - id: 100
+                  name: "Taro"
+                  email: "example0000@yahoo.co.jp"
+                - id: 101
+                  name: "Jiro"
+                  email: "example1111@yahoo.co.jp"
         "401":
           description: Authorization Error
           content:
@@ -44,17 +39,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
-        "404":
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/404Error"
-              example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
         "500":
           description: Backend Server Error
           content:
@@ -62,8 +50,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}:
     get:
       tags:
@@ -78,25 +68,19 @@ paths:
           description: The ID of the user
           schema:
             type: integer
+      security:
+        - BearerAuth: []
       responses:
         "200":
-          description: user response
+          description: User response
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  user:
-                    type: object
-                    $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/User"
               example:
-                status: 200
-                user:
-                  id: 100
-                  name: "Taro"
-                  email: "example0000@yahoo.co.jp"
+                id: 100
+                name: "Taro"
+                email: "example0000@yahoo.co.jp"
         "401":
           description: Authorization Error
           content:
@@ -104,8 +88,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
         "404":
           description: Not Found
           content:
@@ -113,8 +110,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/404Error"
               example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested user resource was not found on the server."
         "500":
           description: Backend Server Error
           content:
@@ -122,8 +121,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}/todos:
     get:
       tags:
@@ -138,29 +139,25 @@ paths:
           description: The ID of the user
           schema:
             type: integer
+      security:
+        - BearerAuth: []
       responses:
         "200":
           description: Successful response with user todos
           content:
             application/json:
               schema:
-                type: object
+                type: array
                 properties:
-                  status:
-                    type: string
-                  users:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Todo"
+                  items:
+                    $ref: "#/components/schemas/Todo"
               example:
-                status: 200
-                todos:
-                  - id: 1
-                    title: "Sample Todo 1"
-                    completed: false
-                  - id: 2
-                    title: "Sample Todo 2"
-                    completed: true
+                - id: 1
+                  title: "Sample Todo 1"
+                  completed: false
+                - id: 2
+                  title: "Sample Todo 2"
+                  completed: true
         "401":
           description: Authorization Error
           content:
@@ -168,17 +165,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
-        "404":
-          description: Not Found
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/404Error"
+                $ref: "#/components/schemas/403Error"
               example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
         "500":
           description: Backend Server Error
           content:
@@ -186,8 +187,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
     post:
       tags:
         - Todo
@@ -215,6 +218,8 @@ paths:
                 - content
             example:
               content: "Buy groceries"
+      security:
+        - BearerAuth: []
       responses:
         "201":
           description: Successful response with user todos created
@@ -223,7 +228,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/201Response"
               example:
-                status: 201
                 message: "Successful create user todo"
         "401":
           description: Authorization Error
@@ -232,17 +236,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
-        "404":
-          description: Not Found
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/404Error"
+                $ref: "#/components/schemas/403Error"
               example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
         "500":
           description: Backend Server Error
           content:
@@ -250,8 +258,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}/todos/{todoId}:
     get:
       tags:
@@ -272,25 +282,19 @@ paths:
           description: The ID of the todo
           schema:
             type: integer
+      security:
+        - BearerAuth: []
       responses:
         "200":
           description: Successful response with the specific todo
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  users:
-                    type: object
-                    $ref: "#/components/schemas/Todo"
+                $ref: "#/components/schemas/Todo"
               example:
-                status: 200
-                todo:
-                  id: 1
-                  title: "Sample Todo 1"
-                  completed: false
+                id: 1
+                title: "Sample Todo 1"
+                completed: false
         "401":
           description: Authorization Error
           content:
@@ -298,8 +302,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
         "404":
           description: Not Found
           content:
@@ -307,8 +324,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/404Error"
               example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested todo resource was not found on the server."
         "500":
           description: Backend Server Error
           content:
@@ -316,8 +335,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
     put:
       tags:
         - Todo
@@ -356,25 +377,19 @@ paths:
             example:
               title: "Updated Todo Title"
               completed: true
+      security:
+        - BearerAuth: []
       responses:
         "200":
           description: Successful update of the specific todo
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  users:
-                    type: object
-                    $ref: "#/components/schemas/Todo"
+                $ref: "#/components/schemas/Todo"
               example:
-                status: 200
-                todo:
-                  id: 1
-                  title: "Sample Todo 1"
-                  completed: true
+                id: 1
+                title: "Sample Todo 1"
+                completed: true
         "401":
           description: Authorization Error
           content:
@@ -382,8 +397,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
         "404":
           description: Not Found
           content:
@@ -391,8 +419,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/404Error"
               example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested todo resource was not found on the server."
         "500":
           description: Backend Server Error
           content:
@@ -400,8 +430,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
     delete:
       tags:
         - Todo
@@ -421,6 +453,8 @@ paths:
           description: The ID of the todo
           schema:
             type: integer
+      security:
+        - BearerAuth: []
       responses:
         "204":
           description: successfully deleted
@@ -429,7 +463,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/204Response"
               example:
-                status: 204
                 message: "successfully deleted"
         "401":
           description: Authorization Error
@@ -438,8 +471,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/401Error"
               example:
-                status: 401
-                message: "Authorization Error"
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/403Error"
+              example:
+                error:
+                  code: 403
+                  message: "Forbidden"
+                  details: "You do not have permission to access this todo resource."
         "404":
           description: Not Found
           content:
@@ -447,8 +493,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/404Error"
               example:
-                status: 404
-                message: "Not Found"
+                error:
+                  code: 404
+                  message: "Not Found"
+                  details: "The requested todo resource was not found on the server."
         "500":
           description: Backend Server Error
           content:
@@ -456,9 +504,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/500Error"
               example:
-                status: 500
-                message: "Server Error"
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     User:
       type: "object"
@@ -504,48 +559,80 @@ components:
     201Response:
       type: "object"
       properties:
-        status:
-          type: "integer"
-          format: "int32"
         message:
           type: "string"
           example: "Successful crete user todo"
     204Response:
       type: "object"
       properties:
-        status:
-          type: "integer"
-          format: "int32"
         message:
           type: "string"
           example: "Successfully deleted"
     401Error:
       type: "object"
       properties:
-        status:
-          type: "integer"
-          format: "int32"
-        message:
-          type: "string"
-          example: "Authorization Error"
+        error:
+          type: "object"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 401
+            message:
+              type: "string"
+              example: "Authorization Error"
+            details:
+              type: "string"
+              example: "User authentication failed. Please check your credentials and try again."
+    403Error:
+      type: "object"
+      properties:
+        error:
+          type: "object"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 403
+            message:
+              type: "string"
+              example: "Forbidden"
+            details:
+              type: "string"
+              example: "You do not have permission to access this todo resource."
     404Error:
       type: "object"
       properties:
-        status:
-          type: "integer"
-          format: "int32"
-        message:
-          type: "string"
-          example: "Not Found"
+        error:
+          type: "object"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 404
+            message:
+              type: "string"
+              example: "Not Found"
+            details:
+              type: "string"
+              example: "The requested resource was not found on the server."
     500Error:
       type: "object"
       properties:
-        status:
-          type: "integer"
-          format: "int32"
-        message:
-          type: "string"
-          example: "Server Error"
+        error:
+          type: "object"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 500
+            message:
+              type: "string"
+              example: "Server Error"
+            details:
+              type: "string"
+              example: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
