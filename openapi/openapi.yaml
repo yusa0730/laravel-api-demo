@@ -1,0 +1,551 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: User TODO LIST API
+  description: >-
+    ユーザーが自分のTodoを登録、更新、検索、削除をするためのAPI用のSwagger
+servers:
+  - url: "http://localhost:8003"
+paths:
+  /users:
+    get:
+      tags:
+        - User
+      description: >
+        Returns all users
+      operationId: findUsers
+      responses:
+        "200":
+          description: user response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+              example:
+                status: 200
+                users:
+                  - id: 100
+                    name: "Taro"
+                    email: "example0000@yahoo.co.jp"
+                  - id: 101
+                    name: "Jiro"
+                    email: "example1111@yahoo.co.jp"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+  /users/{userId}:
+    get:
+      tags:
+        - User
+      description: >
+        Returns user
+      operationId: findUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: user response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  user:
+                    type: object
+                    $ref: "#/components/schemas/User"
+              example:
+                status: 200
+                user:
+                  id: 100
+                  name: "Taro"
+                  email: "example0000@yahoo.co.jp"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+  /users/{userId}/todos:
+    get:
+      tags:
+        - Todo
+      description: >
+        Returns todos for a specific user by ID
+      operationId: findUserTodos
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response with user todos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Todo"
+              example:
+                status: 200
+                todos:
+                  - id: 1
+                    title: "Sample Todo 1"
+                    completed: false
+                  - id: 2
+                    title: "Sample Todo 2"
+                    completed: true
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+    post:
+      tags:
+        - Todo
+      description: >
+        create todo for a specific user by ID
+      operationId: createUserTodo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: The content of the todo item
+              required:
+                - content
+            example:
+              content: "Buy groceries"
+      responses:
+        "201":
+          description: Successful response with user todos created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/201Response"
+              example:
+                status: 201
+                message: "Successful create user todo"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+  /users/{userId}/todos/{todoId}:
+    get:
+      tags:
+        - Todo
+      description: >
+        Retrieves a specific todo for a user by user ID and todo ID
+      operationId: getUserTodo
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The ID of the todo
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response with the specific todo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  users:
+                    type: object
+                    $ref: "#/components/schemas/Todo"
+              example:
+                status: 200
+                todo:
+                  id: 1
+                  title: "Sample Todo 1"
+                  completed: false
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+    put:
+      tags:
+        - Todo
+      description: >
+        Updates a specific todo for a user by user ID and todo ID
+      operationId: updateUserTodo
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The ID of the todo
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the todo
+                completed:
+                  type: boolean
+                  description: Completion status of the todo
+              required:
+                - title
+                - completed
+            example:
+              title: "Updated Todo Title"
+              completed: true
+      responses:
+        "200":
+          description: Successful update of the specific todo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  users:
+                    type: object
+                    $ref: "#/components/schemas/Todo"
+              example:
+                status: 200
+                todo:
+                  id: 1
+                  title: "Sample Todo 1"
+                  completed: true
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+    delete:
+      tags:
+        - Todo
+      description: >
+        Deletes a specific todo for a user by user ID and todo ID
+      operationId: deleteUserTodo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The ID of the todo
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204Response"
+              example:
+                status: 204
+                message: "successfully deleted"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                status: 401
+                message: "Authorization Error"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/404Error"
+              example:
+                status: 404
+                message: "Not Found"
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                status: 500
+                message: "Server Error"
+components:
+  schemas:
+    User:
+      type: "object"
+      required:
+        - "name"
+        - "email"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 100
+        name:
+          type: "string"
+          description: "ユーザー名"
+          example: "Taro"
+        email:
+          type: "string"
+          description: "登録時に利用するメールアドレス"
+          example: "example0000@yahoo.co.jp"
+    Todo:
+      type: "object"
+      required:
+        - "content"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        userId:
+          type: "integer"
+          format: "int64"
+          example: 100
+        content:
+          type: "string"
+          description: "ユーザー名"
+          example: "Taro"
+        status:
+          type: "string"
+          description: "todo status"
+          enum:
+            - "Completed"
+            - "Incomplete"
+    201Response:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+          example: "Successful crete user todo"
+    204Response:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+          example: "Successfully deleted"
+    401Error:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+          example: "Authorization Error"
+    404Error:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+          example: "Not Found"
+    500Error:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+          example: "Server Error"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
