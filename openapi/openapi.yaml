@@ -550,12 +550,10 @@ components:
           type: "string"
           description: "ユーザー名"
           example: "Taro"
-        status:
-          type: "string"
+        completed:
+          type: "boolean"
           description: "todo status"
-          enum:
-            - "Completed"
-            - "Incomplete"
+          example: true
     201Response:
       type: "object"
       properties:
