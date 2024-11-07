@@ -29,10 +29,10 @@ Route::controller(LoginController::class)->group(function () {
     // Route::post('auth/logout', 'logout');
 });
 
-// Route::controller(UserController::class)->group(function () {
-//     Route::middleware(['auth:sanctum'])->get('users', 'index');
-//     Route::middleware(['auth:sanctum'])->get('users/{userId}', 'show');
-// });
+Route::controller(UserController::class)->group(function () {
+    Route::get('users', 'index')->middleware('auth:sanctum');
+    Route::get('users/{userId}', 'show')->middleware('auth:sanctum');
+});
 
 // Route::controller(TodoController::class)->group(function () {
 //     Route::middleware(['auth:sanctum'])->get('users/{userId}/todos', 'index');

@@ -16,12 +16,6 @@ class RegisterController extends BaseController {
    * @return \Illuminate\Http\Response
    */
   public function register(Request $request): JsonResponse {
-    // $validator = Validator::make($request->all, [
-    //   'name' => 'required',
-    //   'email' => 'required|email',
-    //   'password' => 'required',
-    //   'c_password' => 'required|same:password'
-    // ]);
     $validator = Validator::make($request->all(), [
       'name' => 'required',
       'email' => 'required|email',
