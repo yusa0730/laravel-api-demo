@@ -15,8 +15,9 @@ class LoginController extends BaseController {
    * @return \Illuminate\Http\Response
    */
   public function login(Request $request): JsonResponse {
+    // ユーザーの認証情報（メールアドレスとパスワード）が正しいかを確認しています。
     if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) { 
-      return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+      return $this->sendError('parameter error.', ['error' => 'parameter error'], 400);
     }
 
     $user = Auth::user();

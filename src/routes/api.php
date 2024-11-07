@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\LoginController;
+use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\User\UserController;
 use App\Http\Controllers\API\Todo\TodoController;
 
@@ -21,12 +22,14 @@ use App\Http\Controllers\API\Todo\TodoController;
 
 Route::controller(RegisterController::class)->group(function () {
     Route::post('auth/register', 'register');
-    // Route::post('auth/login', 'login');
 });
 
 Route::controller(LoginController::class)->group(function () {
     Route::post('auth/login', 'login');
-    // Route::post('auth/logout', 'logout');
+});
+
+Route::controller(LogoutController::class)->group(function () {
+    Route::post('auth/logout', 'logout')->middleware('auth:sanctum');
 });
 
 Route::controller(UserController::class)->group(function () {
@@ -34,14 +37,14 @@ Route::controller(UserController::class)->group(function () {
     Route::get('users/{userId}', 'show')->middleware('auth:sanctum');
 });
 
-// Route::controller(TodoController::class)->group(function () {
-//     Route::middleware(['auth:sanctum'])->get('users/{userId}/todos', 'index');
-//     Route::middleware(['auth:sanctum'])->post('users/{userId}/todos', 'create');
+Route::controller(TodoController::class)->group(function () {
+    Route::middleware(['auth:sanctum'])->get('users/{userId}/todos', 'index');
+    Route::middleware(['auth:sanctum'])->post('users/{userId}/todos', 'create');
 
-//     Route::middleware(['auth:sanctum'])->get('users/{userId}/todos/{todoId}', 'show');
-//     Route::middleware(['auth:sanctum'])->put('users/{userId}/todos/{todoId}', 'update');
-//     Route::middleware(['auth:sanctum'])->delete('users/{userId}/todos/{todoId}', 'destroy');
-// });
+    Route::middleware(['auth:sanctum'])->get('users/{userId}/todos/{todoId}', 'show');
+    Route::middleware(['auth:sanctum'])->put('users/{userId}/todos/{todoId}', 'update');
+    Route::middleware(['auth:sanctum'])->delete('users/{userId}/todos/{todoId}', 'destroy');
+});
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

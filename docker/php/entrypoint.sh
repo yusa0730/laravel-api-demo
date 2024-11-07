@@ -14,5 +14,7 @@ mkdir -p /var/www/html/storage/logs
 chmod -R 775 /var/www/html/storage
 chown -R www-data:www-data /var/www/html/storage
 
+php artisan migrate
+
 # php-fpmでコンテナを継続的に実行
 php-fpm
