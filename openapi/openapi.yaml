@@ -5,8 +5,183 @@ info:
   description: >-
     ユーザーが自分のTodoを登録、更新、検索、削除をするためのAPI用のSwagger
 servers:
-  - url: "http://localhost:8003"
+  - url: http://{host}:{port}/api/v1
+    description: 開発用
+    variables:
+      host:
+        default: localhost
+      port:
+        default: "8003"
+  - url: https://example.com/api/v1
+    description: プロダクション API
 paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      description: >
+        register user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email
+                  format: email
+                password:
+                  type: string
+                  description: password
+                confirmPassword:
+                  type: string
+                  description: 確認用password
+              required:
+                - email
+                - password
+                - confirmPassword
+            example:
+              email: "test@gmail.com"
+              password: "test123"
+              confirmPassword: "test123"
+      responses:
+        "201":
+          description: register user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+              example:
+                status: 201
+                data:
+                  userId: 1
+                  accessToken: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      description: >
+        login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email
+                  format: email
+                password:
+                  type: string
+                  description: password
+              required:
+                - email
+                - password
+            example:
+              email: "test@gmail.com"
+              password: "test123"
+      responses:
+        "200":
+          description: login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+              example:
+                status: 200
+                data:
+                  userId: 1
+                  accessToken: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      description: >
+        logout
+      operationId: logout
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: successfully logout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204Response"
+              example:
+                message: "successfully logout"
+        "401":
+          description: Authorization Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/401Error"
+              example:
+                error:
+                  code: 401
+                  message: "Authorization Error"
+                  details: "User authentication failed. Please check your credentials and try again."
+        "500":
+          description: Backend Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Error"
+              example:
+                error:
+                  code: 500
+                  message: "Server Error"
+                  details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users:
     get:
       tags:
@@ -229,6 +404,17 @@ paths:
                 $ref: "#/components/schemas/201Response"
               example:
                 message: "Successful create user todo"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
         "401":
           description: Authorization Error
           content:
@@ -373,7 +559,6 @@ paths:
                   description: Completion status of the todo
               required:
                 - title
-                - completed
             example:
               title: "Updated Todo Title"
               completed: true
@@ -390,6 +575,17 @@ paths:
                 id: 1
                 title: "Sample Todo 1"
                 completed: true
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
         "401":
           description: Authorization Error
           content:
@@ -464,6 +660,17 @@ paths:
                 $ref: "#/components/schemas/204Response"
               example:
                 message: "successfully deleted"
+        "400":
+          description: Request Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Error"
+              example:
+                error:
+                  code: 400
+                  message: "Request Parameter Error"
+                  details: "The 'email' field must be a valid email address."
         "401":
           description: Authorization Error
           content:
@@ -513,11 +720,26 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
+      bearerFormat: "Personal Access Token"
   schemas:
+    RegisterResponse:
+      type: "object"
+      required:
+        - "accessToken"
+        - "userId"
+      properties:
+        accessToken:
+          type: "string"
+          description: "アクセストークン"
+          example: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+        userId:
+          type: "integer"
+          format: "int64"
+          example: 1
     User:
       type: "object"
       required:
+        - "id"
         - "name"
         - "email"
       properties:
@@ -536,7 +758,10 @@ components:
     Todo:
       type: "object"
       required:
+        - "id"
+        - "userId"
         - "content"
+        - "completed"
       properties:
         id:
           type: "integer"
@@ -556,21 +781,53 @@ components:
           example: true
     201Response:
       type: "object"
+      required:
+        - "message"
       properties:
         message:
           type: "string"
           example: "Successful crete user todo"
     204Response:
       type: "object"
+      required:
+        - "message"
       properties:
         message:
           type: "string"
           example: "Successfully deleted"
-    401Error:
+    400Error:
       type: "object"
+      required:
+        - "error"
       properties:
         error:
           type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
+          properties:
+            code:
+              type: "integer"
+              format: "int32"
+              example: 400
+            message:
+              type: "string"
+              example: "Request Parameter Error"
+            details:
+              type: "string"
+              example: "The 'email' field must be a valid email address."
+    401Error:
+      type: "object"
+      required:
+        - "error"
+      properties:
+        error:
+          type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
           properties:
             code:
               type: "integer"
@@ -584,9 +841,15 @@ components:
               example: "User authentication failed. Please check your credentials and try again."
     403Error:
       type: "object"
+      required:
+        - "error"
       properties:
         error:
           type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
           properties:
             code:
               type: "integer"
@@ -600,9 +863,15 @@ components:
               example: "You do not have permission to access this todo resource."
     404Error:
       type: "object"
+      required:
+        - "error"
       properties:
         error:
           type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
           properties:
             code:
               type: "integer"
@@ -616,9 +885,15 @@ components:
               example: "The requested resource was not found on the server."
     500Error:
       type: "object"
+      required:
+        - "error"
       properties:
         error:
           type: "object"
+          required:
+            - "code"
+            - "message"
+            - "details"
           properties:
             code:
               type: "integer"
