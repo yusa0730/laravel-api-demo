@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\API\Todo;
+namespace App\Http\Controllers\API\V1\Todo;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\API\V1\BaseController as BaseController;
 use App\Models\Todo;
 use Illuminate\Support\Facades\Auth;
 use Validator;
