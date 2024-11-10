@@ -11,9 +11,9 @@ class BaseController extends Controller {
    *
    * @return \Illuminate\Http\Response
    */
-  public function sendResponse($keyName, $result, $code, $message = null) {
+  public function sendResponse($keyName, $result, $status, $message = null) {
     $response = [
-      'status' => $code
+      'status' => $status
     ];
 
     if (isset($keyName) && isset($result)) {
@@ -24,7 +24,7 @@ class BaseController extends Controller {
       $response['message'] = $message;
     }
 
-    return response()->json($response, $code);
+    return response()->json($response, $status);
   }
 
   /**
@@ -32,16 +32,15 @@ class BaseController extends Controller {
   *
   * @return \Illuminate\Http\Response
   */
-  public function sendError($error, $errorMessages = [], $code = 404) {
+  public function sendError($error, $errorMessages = [], $status = 404) {
     $response = [
-      'status' => $code,
-      'message' => $error,
+      'error' => [
+        'status' => $status,
+        'message' => $error,
+        'details' => !empty($errorMessages) ? $errorMessages : null,
+      ]
     ];
 
-    if (!empty($errorMessages)) {
-      $response['data'] = $errorMessages;
-    }
-
-    return response()->json($response, $code);
+    return response()->json($response, $status);
   }
 }

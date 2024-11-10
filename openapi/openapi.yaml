@@ -64,6 +64,7 @@ paths:
                 data:
                   userId: 1
                   accessToken: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+                  message: "User Registeration successfully"
         "400":
           description: Request Parameter Error
           content:
@@ -72,9 +73,13 @@ paths:
                 $ref: "#/components/schemas/400Error"
               example:
                 error:
-                  code: 400
+                  status: 400
                   message: "Request Parameter Error"
-                  details: "The 'email' field must be a valid email address."
+                  details:
+                    password:
+                      - The password field is required.
+                    confirmPassword:
+                      - "The confirm password field must match password."
         "500":
           description: Backend Server Error
           content:
@@ -83,7 +88,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /auth/login:
@@ -125,6 +130,7 @@ paths:
                 data:
                   userId: 1
                   accessToken: "1|I45nb5Du2DzUYmYi38lUB3b8xxxxxxxxxxxx"
+                  message: "User Login Successfully"
         "400":
           description: Request Parameter Error
           content:
@@ -133,9 +139,9 @@ paths:
                 $ref: "#/components/schemas/400Error"
               example:
                 error:
-                  code: 400
-                  message: "Request Parameter Error"
-                  details: "The 'email' field must be a valid email address."
+                  status: 400
+                  message: "Parameter Error"
+                  details: "The provided email or password is incorrect. Please check your credentials and try again"
         "500":
           description: Backend Server Error
           content:
@@ -144,7 +150,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /auth/logout:
@@ -173,7 +179,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "500":
@@ -184,7 +190,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users:
@@ -220,7 +226,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "500":
@@ -231,7 +237,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}:
@@ -269,7 +275,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "403":
@@ -280,7 +286,7 @@ paths:
                 $ref: "#/components/schemas/403Error"
               example:
                 error:
-                  code: 403
+                  status: 403
                   message: "Forbidden"
                   details: "You do not have permission to access this todo resource."
         "404":
@@ -291,7 +297,7 @@ paths:
                 $ref: "#/components/schemas/404Error"
               example:
                 error:
-                  code: 404
+                  status: 404
                   message: "Not Found"
                   details: "The requested user resource was not found on the server."
         "500":
@@ -302,7 +308,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}/todos:
@@ -346,7 +352,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "403":
@@ -357,7 +363,7 @@ paths:
                 $ref: "#/components/schemas/403Error"
               example:
                 error:
-                  code: 403
+                  status: 403
                   message: "Forbidden"
                   details: "You do not have permission to access this todo resource."
         "500":
@@ -368,7 +374,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
     post:
@@ -417,7 +423,7 @@ paths:
                 $ref: "#/components/schemas/400Error"
               example:
                 error:
-                  code: 400
+                  status: 400
                   message: "Request Parameter Error"
                   details: "The 'email' field must be a valid email address."
         "401":
@@ -428,7 +434,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "403":
@@ -439,7 +445,7 @@ paths:
                 $ref: "#/components/schemas/403Error"
               example:
                 error:
-                  code: 403
+                  status: 403
                   message: "Forbidden"
                   details: "You do not have permission to access this todo resource."
         "500":
@@ -450,7 +456,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
   /users/{userId}/todos/{todoId}:
@@ -494,7 +500,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "403":
@@ -505,7 +511,7 @@ paths:
                 $ref: "#/components/schemas/403Error"
               example:
                 error:
-                  code: 403
+                  status: 403
                   message: "Forbidden"
                   details: "You do not have permission to access this todo resource."
         "404":
@@ -516,7 +522,7 @@ paths:
                 $ref: "#/components/schemas/404Error"
               example:
                 error:
-                  code: 404
+                  status: 404
                   message: "Not Found"
                   details: "The requested todo resource was not found on the server."
         "500":
@@ -527,7 +533,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
     put:
@@ -588,7 +594,7 @@ paths:
                 $ref: "#/components/schemas/400Error"
               example:
                 error:
-                  code: 400
+                  status: 400
                   message: "Request Parameter Error"
                   details: "The 'email' field must be a valid email address."
         "401":
@@ -599,7 +605,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "403":
@@ -610,7 +616,7 @@ paths:
                 $ref: "#/components/schemas/403Error"
               example:
                 error:
-                  code: 403
+                  status: 403
                   message: "Forbidden"
                   details: "You do not have permission to access this todo resource."
         "404":
@@ -621,7 +627,7 @@ paths:
                 $ref: "#/components/schemas/404Error"
               example:
                 error:
-                  code: 404
+                  status: 404
                   message: "Not Found"
                   details: "The requested todo resource was not found on the server."
         "500":
@@ -632,7 +638,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
     delete:
@@ -673,7 +679,7 @@ paths:
                 $ref: "#/components/schemas/400Error"
               example:
                 error:
-                  code: 400
+                  status: 400
                   message: "Request Parameter Error"
                   details: "The 'email' field must be a valid email address."
         "401":
@@ -684,7 +690,7 @@ paths:
                 $ref: "#/components/schemas/401Error"
               example:
                 error:
-                  code: 401
+                  status: 401
                   message: "Authorization Error"
                   details: "User authentication failed. Please check your credentials and try again."
         "403":
@@ -695,7 +701,7 @@ paths:
                 $ref: "#/components/schemas/403Error"
               example:
                 error:
-                  code: 403
+                  status: 403
                   message: "Forbidden"
                   details: "You do not have permission to access this todo resource."
         "404":
@@ -706,7 +712,7 @@ paths:
                 $ref: "#/components/schemas/404Error"
               example:
                 error:
-                  code: 404
+                  status: 404
                   message: "Not Found"
                   details: "The requested todo resource was not found on the server."
         "500":
@@ -717,7 +723,7 @@ paths:
                 $ref: "#/components/schemas/500Error"
               example:
                 error:
-                  code: 500
+                  status: 500
                   message: "Server Error"
                   details: "An unexpected error occurred on the server. Please try again later or contact support if the issue persists."
 components:
@@ -741,6 +747,10 @@ components:
           type: "integer"
           format: "int64"
           example: 1
+        message:
+          type: "string"
+          description: "message"
+          example: "User Registeration successfully"
     User:
       type: "object"
       required:
@@ -808,11 +818,11 @@ components:
         error:
           type: "object"
           required:
-            - "code"
+            - "status"
             - "message"
             - "details"
           properties:
-            code:
+            status:
               type: "integer"
               format: "int32"
               example: 400
@@ -830,11 +840,11 @@ components:
         error:
           type: "object"
           required:
-            - "code"
+            - "status"
             - "message"
             - "details"
           properties:
-            code:
+            status:
               type: "integer"
               format: "int32"
               example: 401
@@ -852,11 +862,11 @@ components:
         error:
           type: "object"
           required:
-            - "code"
+            - "status"
             - "message"
             - "details"
           properties:
-            code:
+            status:
               type: "integer"
               format: "int32"
               example: 403
@@ -874,11 +884,11 @@ components:
         error:
           type: "object"
           required:
-            - "code"
+            - "status"
             - "message"
             - "details"
           properties:
-            code:
+            status:
               type: "integer"
               format: "int32"
               example: 404
@@ -896,11 +906,11 @@ components:
         error:
           type: "object"
           required:
-            - "code"
+            - "status"
             - "message"
             - "details"
           properties:
-            code:
+            status:
               type: "integer"
               format: "int32"
               example: 500

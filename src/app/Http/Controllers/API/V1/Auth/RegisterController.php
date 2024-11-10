@@ -20,11 +20,11 @@ class RegisterController extends BaseController {
       'name' => 'required',
       'email' => 'required|email',
       'password' => 'required',
-      'c_password' => 'required|same:password'
+      'confirmPassword' => 'required|same:password'
     ]);
 
     if ($validator->fails()) {
-      return $this->sendError('Validation Error.', $validator->errors());
+      return $this->sendError('Validation Error.', $validator->errors(), 400);
     }
 
     $input = $request->all();
