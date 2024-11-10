@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +27,21 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     */
+    public function render($request, Throwable $exception)
+    {
+        // メールアドレスの一意制約違反の場合の処理
+        if ($exception instanceof QueryException && $exception->errorInfo[1] == 1062) {
+            return response()->json([
+                'status' => 400,
+                'error' => 'Duplicate entry: The email address already exists.'
+            ], 400);
+        }
+
+        return parent::render($request, $exception);
     }
 }

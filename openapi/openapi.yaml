@@ -29,6 +29,9 @@ paths:
             schema:
               type: object
               properties:
+                name:
+                  type: string
+                  description: user name
                 email:
                   type: string
                   description: email
@@ -40,10 +43,12 @@ paths:
                   type: string
                   description: 確認用password
               required:
+                - name
                 - email
                 - password
                 - confirmPassword
             example:
+              name: "Taro"
               email: "test@gmail.com"
               password: "test123"
               confirmPassword: "test123"

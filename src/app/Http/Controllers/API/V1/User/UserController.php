@@ -9,15 +9,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends BaseController {
+  public function __construct(User $user)
+  {
+    $this->user = $user;
+  }
+  
   /**
    * find all users api
    *
    * @return \Illuminate\Http\Response
    */
-  public function index(): JsonResponse {
-    $users = User::all();
+  public function index(): JsonResponse
+  {
+    $users = $this->user->all();
 
-    return $this->sendResponse($users, 'response all users');
+    return $this->sendResponse('users', $users, 200);
   }
 
   /**
@@ -25,9 +31,8 @@ class UserController extends BaseController {
    *
    * @return \Illuminate\Http\Response
    */
-  public function show($userId): JsonResponse {
-    $user = User::find($userId);
-
-    return $this->sendResponse($user, 'response user');
-  } 
+  public function show(Request $request): JsonResponse
+  {
+    return $this->sendResponse('user', $request->user, 200);
+  }
 }

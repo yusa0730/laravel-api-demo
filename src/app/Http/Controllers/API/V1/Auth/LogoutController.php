@@ -17,6 +17,6 @@ class LogoutController extends BaseController {
   public function logout(Request $request): JsonResponse {
     $request->user()->currentAccessToken()->delete();
 
-    return $this->sendResponse('', 'successfully logout');
+    return $this->sendResponse(null, null, 200, 'successfully logout');
   }
 }

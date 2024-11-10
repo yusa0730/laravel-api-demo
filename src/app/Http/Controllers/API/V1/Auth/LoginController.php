@@ -21,9 +21,9 @@ class LoginController extends BaseController {
     }
 
     $user = Auth::user();
-    $success['token'] = $user->createToken('API Access')->plainTextToken;
-    $success['userId'] = $user->id;
+    $data['token'] = $user->createToken('API Access')->plainTextToken;
+    $data['userId'] = $user->id;
 
-    return $this->sendResponse($success, 'User login successfully.');
+    return $this->sendResponse('data', $data, 200, 'User Login Successfully.');
   }
 }
