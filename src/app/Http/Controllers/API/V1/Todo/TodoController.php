@@ -8,8 +8,11 @@ use App\Models\Todo;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Http\JsonResponse;
+use App\Exceptions\CustomException;
 
 class TodoController extends BaseController {
+  private $todo;
+
   public function __construct(Todo $todo)
   {
     $this->todo = $todo;
@@ -49,7 +52,7 @@ class TodoController extends BaseController {
     ]);
 
     if ($validator->fails()) {
-      return $this->sendError('Validation Error.', $validator->errors());
+      throw new CustomException('Validation Error', $validator->errors(), 400);
     }
 
     $input = $request->all();
@@ -72,7 +75,7 @@ class TodoController extends BaseController {
     ]);
 
     if ($validator->fails()) {
-      return $this->sendError('Validation Error.', $validator->errors(), 400);
+      throw new CustomException('Validation Error.', $validator->errors(), 400);
     }
 
     $todo = $request->todo;
