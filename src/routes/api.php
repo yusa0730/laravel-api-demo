@@ -21,49 +21,46 @@ use App\Http\Controllers\API\V1\Todo\TodoController;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::controller(RegisterController::class)->group(function () {
-        Route::post('auth/register', 'register');
-    });
+	Route::controller(RegisterController::class)->group(function () {
+		Route::post('auth/register', 'register');
+	});
 
-    Route::controller(LoginController::class)->group(function () {
-        Route::post('auth/login', 'login');
-    });
+	Route::controller(LoginController::class)->group(function () {
+		Route::post('auth/login', 'login');
+	});
 
-    Route::controller(LogoutController::class)->group(function () {
-        Route::middleware('auth:sanctum')->post('auth/logout', 'logout');
-    });
+	Route::controller(LogoutController::class)->group(function () {
+		Route::middleware('auth:sanctum')->post('auth/logout', 'logout');
+	});
 
-    Route::controller(UserController::class)->group(function () {
-        Route::middleware('auth:sanctum')->get('users', 'index');
-        Route::middleware(['auth:sanctum', 'find.user', 'check.userId'])->get('users/{userId}', 'show');
-    });
+	Route::controller(UserController::class)->group(function () {
+		Route::middleware('auth:sanctum')->get('users', 'index');
+		Route::middleware(['auth:sanctum', 'check.userId'])->get('users/{userId}', 'show');
+	});
 
-    Route::controller(TodoController::class)->group(function () {
-        Route::middleware(['auth:sanctum', 'find.user', 'check.userId'])->get('users/{userId}/todos', 'index');
-        Route::middleware(['auth:sanctum', 'find.user', 'check.userId'])->post('users/{userId}/todos', 'create');
+	Route::controller(TodoController::class)->group(function () {
+		Route::middleware(['auth:sanctum', 'check.userId'])->get('users/{userId}/todos', 'index');
+		Route::middleware(['auth:sanctum', 'check.userId'])->post('users/{userId}/todos', 'create');
 
-        Route::middleware([
-            'auth:sanctum',
-            'find.user',
-            'check.userId',
-            'find.todo',
-            'check.todoId',
-        ])->get('users/{userId}/todos/{todoId}', 'show');
-        
-        Route::middleware([
-            'auth:sanctum',
-            'find.user',
-            'check.userId',
-            'find.todo',
-            'check.todoId',
-        ])->put('users/{userId}/todos/{todoId}', 'update');
-        
-        Route::middleware([
-            'auth:sanctum',
-            'find.user',
-            'check.userId',
-            'find.todo',
-            'check.todoId',
-        ])->delete('users/{userId}/todos/{todoId}', 'destroy');
-    });
+		Route::middleware([
+			'auth:sanctum',
+			'check.userId',
+			'find.todo',
+			'check.todoId',
+		])->get('users/{userId}/todos/{todoId}', 'show');
+
+		Route::middleware([
+			'auth:sanctum',
+			'check.userId',
+			'find.todo',
+			'check.todoId',
+		])->put('users/{userId}/todos/{todoId}', 'update');
+
+		Route::middleware([
+			'auth:sanctum',
+			'check.userId',
+			'find.todo',
+			'check.todoId',
+		])->delete('users/{userId}/todos/{todoId}', 'destroy');
+	});
 });

@@ -18,8 +18,13 @@ class CheckTodoId
     {
 			$todoId = $request->route('todoId');
 
-			if (!$todoId || !is_numeric($todoId)) {
-				throw new CustomException('Request Parameter Error', ['todoId is required'], 400);
+			if (!$todoId) {
+				throw new CustomException('Request Parameter Error', ['todoId' => ['todoId is required']], 400);
+			}
+
+			// 数値かどうかを判定
+			if (!is_numeric($todoId)) {
+				throw new CustomException('Request Parameter Error', ['todoId' => ['todoId must be number']], 400);
 			}
 
 			return $next($request);

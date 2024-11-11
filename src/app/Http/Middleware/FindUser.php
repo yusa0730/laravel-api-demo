@@ -23,8 +23,6 @@ class FindUser
 			throw new CustomException('Not Found', ['user data nothing'], 404);
 		}
 
-		$request->merge(['user' => $user]);
-
 		return $next($request);
 	}
 }

@@ -20,7 +20,7 @@ class FindTodo
 		// todoIdに対応するユーザーが存在しない場合は404エラーを返す
 		$todo = Todo::find($request->todoId);
 		if (!$todo) {
-			throw new CustomException('Not Found', ['todo data nothing'], 404);
+			throw new CustomException('Not Found', ['todo' => ['todo data nothing']], 404);
 		}
 
 		$request->merge(['todo' => $todo]);

@@ -26,7 +26,7 @@ class Authenticate extends Middleware
 		// リクエストヘッダーからトークンを取得
 		$authHeader = $request->header('Authorization');
 		if (!$authHeader || !Str::startsWith($authHeader, 'Bearer ')) {
-			throw new CustomException('UnAuthorized', ['No access token provided'], 401);
+			throw new CustomException('Unauthorized', ['access_token' => ['Access token is required but not provided']], 401);
 		}
 
 		$token = Str::after($authHeader, 'Bearer ');
@@ -35,14 +35,14 @@ class Authenticate extends Middleware
 		$tokenRecord = DB::table('personal_access_tokens')->where('token', hash('sha256', $token))->first();
 
 		if (!$tokenRecord) {
-			throw new CustomException('UnAuthorized', ['Token not found in database'], 401);
+			throw new CustomException('Unauthorized', ['token_record' => ['Token not found in database']], 401);
 		}
 
 		// トークンのユーザーIDに基づいてユーザーを取得
 		$user = User::find($tokenRecord->tokenable_id);
 
 		if (!$user) {
-			throw new CustomException('UnAuthorized', ['User not found'], 401);
+			throw new CustomException('Not Found', ['user' => ['user not found']], 404);
 		}
 
 		return parent::handle($request, $next, ...$guards);

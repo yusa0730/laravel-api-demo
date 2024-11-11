@@ -19,13 +19,18 @@ class CheckUserId
     {
 			$userId = $request->route('userId');
 
-			if (!$userId || !is_numeric($userId)) {
-				throw new CustomException('Request Parameter Error', ['userId is required'], 400);
+			if (!$userId) {
+				throw new CustomException('Request Parameter Error', ['userId' => ['userId is required']], 400);
+			}
+
+			// 数字かどうかを判定
+			if (!is_numeric($userId)) {
+				throw new CustomException('Request Parameter Error', ['userId' => ['userId must be number']], 400);
 			}
 
 			// リクエストパラメーターのuserIdの値が認証されたログインしているユーザーのidの値と同じかどうかを確認
 			if ($userId != Auth::id()) {
-				throw new CustomException('Forbidden', ['Unauthorized action'], 403);
+				throw new CustomException('Forbidden', ['userId' => ['This action is not authorized for the specified user']], 403);
 			}
 
 			// 条件を満たす場合、次の処理に進む
