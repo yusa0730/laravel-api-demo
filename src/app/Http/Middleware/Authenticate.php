@@ -23,12 +23,13 @@ class Authenticate extends Middleware
 	}
 
 	public function handle($request, \Closure $next, ...$guards) {
-		// リクエストヘッダーからトークンを取得
+		// リクエストの Authorization ヘッダーを取得
 		$authHeader = $request->header('Authorization');
 		if (!$authHeader || !Str::startsWith($authHeader, 'Bearer ')) {
 			throw new CustomException('Unauthorized', ['access_token' => ['Access token is required but not provided']], 401);
 		}
 
+		// Authorization ヘッダーから「Bearer 」の部分を取り除き、実際のトークンの文字列のみを $token に格納
 		$token = Str::after($authHeader, 'Bearer ');
 
 		// データベースからトークンを検索
