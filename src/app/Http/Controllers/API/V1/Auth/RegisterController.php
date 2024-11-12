@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Http\JsonResponse;
+use App\Exceptions\CustomException;
 
 class RegisterController extends BaseController {
   /**
@@ -24,7 +25,7 @@ class RegisterController extends BaseController {
     ]);
 
     if ($validator->fails()) {
-      return $this->sendError('Validation Error.', $validator->errors(), 400);
+      throw new CustomException('Validation Error', $validator->errors(), 400);
     }
 
     $input = $request->all();

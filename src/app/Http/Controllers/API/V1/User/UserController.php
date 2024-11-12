@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends BaseController {
+  private $user;
+
   public function __construct(User $user)
   {
     $this->user = $user;
   }
-  
+
   /**
    * find all users api
    *

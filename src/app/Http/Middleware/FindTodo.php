@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Todo;
+use App\Exceptions\CustomException;
 
 class FindTodo
 {
@@ -19,10 +20,7 @@ class FindTodo
 		// todoIdに対応するユーザーが存在しない場合は404エラーを返す
 		$todo = Todo::find($request->todoId);
 		if (!$todo) {
-			return response()->json([
-				'status' => 404,
-				'message' => 'Not Found: todo data nothing'
-			], 404);
+			throw new CustomException('Not Found', ['todo' => ['todo data nothing']], 404);
 		}
 
 		$request->merge(['todo' => $todo]);
