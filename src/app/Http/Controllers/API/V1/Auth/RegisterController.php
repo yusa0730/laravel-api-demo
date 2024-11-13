@@ -31,7 +31,7 @@ class RegisterController extends BaseController {
     $input = $request->all();
     $input['password'] = bcrypt($input['password']);
     $user = User::create($input);
-    $data['token'] = $user->createToken('API Access')->plainTextToken;
+    $data['accessToken'] = $user->createToken('API Access')->plainTextToken;
     $data['userId'] = $user->id;
 
     return $this->sendResponse('data', $data, 201, 'User Registeration successfully');
