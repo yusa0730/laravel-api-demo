@@ -35,6 +35,6 @@ class UserController extends BaseController {
    */
   public function show(Request $request): JsonResponse
   {
-    return $this->sendResponse('user', $request->user, 200);
+    return $this->sendResponse('user', $request->user(), 200);
   }
 }

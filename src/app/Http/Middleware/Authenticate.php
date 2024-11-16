@@ -26,7 +26,7 @@ class Authenticate extends Middleware
 		// リクエストの Authorization ヘッダーを取得
 		$authHeader = $request->header('Authorization');
 		if (!$authHeader || !Str::startsWith($authHeader, 'Bearer ')) {
-			throw new CustomException('Unauthorized', ['access_token' => ['Access token is required but not provided']], 401);
+			throw new CustomException('Unauthorized', ['accessToken' => ['Access token is required but not provided']], 401);
 		}
 
 		// Authorization ヘッダーから「Bearer 」の部分を取り除き、実際のトークンの文字列のみを $token に格納
@@ -36,7 +36,7 @@ class Authenticate extends Middleware
 		$tokenRecord = DB::table('personal_access_tokens')->where('token', hash('sha256', $token))->first();
 
 		if (!$tokenRecord) {
-			throw new CustomException('Unauthorized', ['token_record' => ['Token not found in database']], 401);
+			throw new CustomException('Unauthorized', ['accessToken' => ['Token not found in database']], 401);
 		}
 
 		// トークンのユーザーIDに基づいてユーザーを取得
