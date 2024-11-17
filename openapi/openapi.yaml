@@ -163,12 +163,12 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "204":
+        "200":
           description: successfully logout
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/204Response"
+                $ref: "#/components/schemas/200Response"
               example:
                 message: "successfully logout"
         "401":
@@ -384,7 +384,7 @@ paths:
         create todo for a specific user by ID
       operationId: createUserTodo
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: The ID of the user
@@ -648,7 +648,7 @@ paths:
         Deletes a specific todo for a user by user ID and todo ID
       operationId: deleteUserTodo
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           description: The ID of the user
@@ -663,12 +663,12 @@ paths:
       security:
         - BearerAuth: []
       responses:
-        "204":
+        "200":
           description: successfully deleted
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/204Response"
+                $ref: "#/components/schemas/200Response"
               example:
                 message: "successfully deleted"
         "400":
@@ -794,6 +794,14 @@ components:
           type: "boolean"
           description: "todo status"
           example: true
+    200Response:
+      type: "object"
+      required:
+        - "message"
+      properties:
+        message:
+          type: "string"
+          example: "Successfully deleted"
     201Response:
       type: "object"
       required:
@@ -802,14 +810,6 @@ components:
         message:
           type: "string"
           example: "Successful crete user todo"
-    204Response:
-      type: "object"
-      required:
-        - "message"
-      properties:
-        message:
-          type: "string"
-          example: "Successfully deleted"
     400Error:
       type: "object"
       required:
