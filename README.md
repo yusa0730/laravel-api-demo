@@ -1,14 +1,38 @@
-# メンタリング用に利用するlaravelで作成したTodoリストのCRUD処理を行えるAPIサーバー
+# 認証機能付きTodoアプリケーション用APIサーバー
 
 ## 開発環境
-- Laravelバージョン10
-- Swagger OpenAPI
-  - メンタリング用のためyamlファイルで記載。後々OpenAPI generatorを利用したコード化に修正予定
+- **使用言語**: PHP 8
+- **フレームワーク**: Laravel 10
+- **コンテナ**: Docker
+- **データベース**: MySQL 8
+- **API仕様書**: OpenAPI
+- **認証**: Laravel Sanctum
+
+## アプリケーションの機能
+
+### 認証機能
+Laravel Sanctumを使用して以下の認証機能を実装：
+
+- **ユーザー登録 (Sign Up)**  
+- **ログイン (Login)**
+- **ログアウト (Logout)**
+- **APIトークンによる認証管理**
+
+### Todo管理機能
+認証済みユーザーが以下のTodo管理を行えるように実装：
+
+- **Todoの作成 (Create)**  
+- **Todoの取得 (Read)**  
+- **Todoの更新 (Update)**  
+- **Todoの削除 (Delete)**  
 
 ## APIの利用の仕方
 
 ### Open API
 https://www.gaku-portfolio.com/swagger-ui/
+
+### Postman URL
+https://www.postman.com/todo-portfolio/workspace/portfolio
 
 ### ユーザー新規登録(emailが重複している場合は別のemailを利用する)
 
@@ -24,9 +48,9 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/register \
 }'
 ```
 
-- レスポンス
+- レスポンス(UserとTodoのエンドポイント、ログアウトのエンドポイントにアクセスする際は<access_token>の部分とuserIdの値を利用する)
 ```
-{"status":201,"data":{"accessToken":"7|HJEvYix5NmN1XRqbKzohU5nQ7kzMLYOdCppQPcQt29f9443f","userId":5},"message":"User Registeration successfully"}
+{"status":201,"data":{"accessToken":"7|<access_token>","userId":5},"message":"User Registeration successfully"}
 ```
 
 ### ログイン
@@ -40,9 +64,9 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/login \
 }'
 ```
 
-- レスポンス
+- レスポンス(UserとTodoのエンドポイント、ログアウトのエンドポイントにアクセスする際は<access_token>の部分とuserIdの値を利用する)
 ```
-{"status":200,"data":{"token":"15|UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5","userId":5},"message":"User Login Successfully"}
+{"status":200,"data":{"token":"15|<access_token>","userId":5},"message":"User Login Successfully"}
 ```
 
 ### ログアウト
@@ -51,7 +75,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/login \
 ```
 curl -X POST https://www.gaku-portfolio.com/api/v1/auth/logout \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer HJEvYix5NmN1XRqbKzohU5nQ7kzMLYOdCppQPcQt29f9443f"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -65,7 +89,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/logout \
 ```
 curl -X GET https://www.gaku-portfolio.com/api/v1/users/5 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -79,7 +103,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5 \
 ```
 curl -X POST https://www.gaku-portfolio.com/api/v1/users/5/todos \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5" \
+-H "Authorization: Bearer <access_token>" \
 -d '{
   "content": "todoの新規作成テスト"
 }'
@@ -96,7 +120,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/users/5/todos \
 ```
 curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -110,7 +134,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos \
 ```
 curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -125,7 +149,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 ```
 curl -X PUT https://www.gaku-portfolio.com/api/v1/users/5/todos/7 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5" \
+-H "Authorization: Bearer <access_token>" \
 -d '{
   "content": "Updated Todo Content",
   "completed": true
@@ -143,7 +167,7 @@ curl -X PUT https://www.gaku-portfolio.com/api/v1/users/5/todos/7 \
 ```
 curl -X DELETE https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -151,3 +175,18 @@ curl -X DELETE https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 {"status":200,"message":"Delete user`s todo successfully"}
 ```
 
+## AWSで利用しているリソース
+- **Route53**
+- **ACM**
+- **CloudFront**
+- **VPC**
+    - インターネットゲートウェイ
+    - アベイラビリティーゾーン
+    - サブネット
+    - ルートテーブル
+    - セキュリティグループ
+- **EIP**
+- **EC2**
+
+### AWS構成図
+<img src="./readme/Todoポートフォリオ.jpg" alt="Todoポートフォリオ" style="width: 1000px; height: auto;">
