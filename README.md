@@ -48,9 +48,9 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/register \
 }'
 ```
 
-- レスポンス
+- レスポンス(UserとTodoのエンドポイント、ログアウトのエンドポイントにアクセスする際は<access_token>の部分とuserIdの値を利用する)
 ```
-{"status":201,"data":{"accessToken":"7|HJEvYix5NmN1XRqbKzohU5nQ7kzMLYOdCppQPcQt29f9443f","userId":5},"message":"User Registeration successfully"}
+{"status":201,"data":{"accessToken":"7|<access_token>","userId":5},"message":"User Registeration successfully"}
 ```
 
 ### ログイン
@@ -64,9 +64,9 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/login \
 }'
 ```
 
-- レスポンス
+- レスポンス(UserとTodoのエンドポイント、ログアウトのエンドポイントにアクセスする際は<access_token>の部分とuserIdの値を利用する)
 ```
-{"status":200,"data":{"token":"15|UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5","userId":5},"message":"User Login Successfully"}
+{"status":200,"data":{"token":"15|<access_token>","userId":5},"message":"User Login Successfully"}
 ```
 
 ### ログアウト
@@ -75,7 +75,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/login \
 ```
 curl -X POST https://www.gaku-portfolio.com/api/v1/auth/logout \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer HJEvYix5NmN1XRqbKzohU5nQ7kzMLYOdCppQPcQt29f9443f"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -89,7 +89,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/auth/logout \
 ```
 curl -X GET https://www.gaku-portfolio.com/api/v1/users/5 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -103,7 +103,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5 \
 ```
 curl -X POST https://www.gaku-portfolio.com/api/v1/users/5/todos \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5" \
+-H "Authorization: Bearer <access_token>" \
 -d '{
   "content": "todoの新規作成テスト"
 }'
@@ -120,7 +120,7 @@ curl -X POST https://www.gaku-portfolio.com/api/v1/users/5/todos \
 ```
 curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -134,7 +134,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos \
 ```
 curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -149,7 +149,7 @@ curl -X GET https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 ```
 curl -X PUT https://www.gaku-portfolio.com/api/v1/users/5/todos/7 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5" \
+-H "Authorization: Bearer <access_token>" \
 -d '{
   "content": "Updated Todo Content",
   "completed": true
@@ -167,7 +167,7 @@ curl -X PUT https://www.gaku-portfolio.com/api/v1/users/5/todos/7 \
 ```
 curl -X DELETE https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer UNvjiay4r316EkqwNQrXOXSh12fYt4WvNqCmYnNb382910a5"
+-H "Authorization: Bearer <access_token>"
 ```
 
 - レスポンス
@@ -190,5 +190,3 @@ curl -X DELETE https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 
 ### AWS構成図
 <img src="./readme/Todoポートフォリオ.jpg" alt="Todoポートフォリオ" style="width: 1000px; height: auto;">
-
-
