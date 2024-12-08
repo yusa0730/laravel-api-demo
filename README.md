@@ -189,4 +189,4 @@ curl -X DELETE https://www.gaku-portfolio.com/api/v1/users/5/todos/6 \
 - **EC2**
 
 ### AWS構成図
-<img src="./readme/Todoポートフォリオ.jpg" alt="Todoポートフォリオ" style="width: 1000px; height: auto;">
+<img src="./readme/TodoPortfolio.jpg" alt="Todoポートフォリオ" style="width: 1000px; height: auto;">
